@@ -145,6 +145,6 @@ for ( var x = 0; x < 31; x++ ) {
 
 console.log(f);
  var f1 = f;
-console.log(f1[1]);
+console.log(f1[1]);//////
 
 })();
