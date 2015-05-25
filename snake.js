@@ -68,10 +68,10 @@ f1[s][s1].classList.add('food');
         var add = res.added;
         var rm  = res.removed;
         
-        if ( snake.body.length > 7  ) {
-          setInterval( func, 200 )
-          console.log(snake.body.length)
-        };
+        // if ( snake.body.length > 7  ) {
+        //   setInterval( func, 200 )
+        //   console.log(snake.body.length)
+        // };
          
 
           if ( add.x ===  -1 || add.x === f.length  ){
