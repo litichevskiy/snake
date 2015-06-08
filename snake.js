@@ -1,5 +1,7 @@
 
 
+
+
 (function ( ) {
 
     var createField = {
@@ -53,7 +55,7 @@
         var s = Math.floor(Math.random() * f1.length ); 
         var s1 = Math.floor(Math.random() * f1.length );
         var snake_body = c;
-        snake_body.push({x:0,y:0});
+        snake_body.splice(1,0,{});//
         f1[s][s1].classList.add('food');
        
    
@@ -106,24 +108,50 @@ var a = document.body;
 
 a.onkeydown = function (event) {
   
-    coordHead(event.keyCode);
+   coordHead(event.keyCode);
   
 };
 
-var coordHead = function () {
 
+
+
+function  coordHead () {
+    //snake.direction
     var o = {
 
-        37 : snake.direction = 'left',
-        38 : snake.direction = 'up',
-        39 :  snake.direction = 'right',
-        40 : snake.direction = 'down',
+        37 : 'left',
+        38 : 'up',
+        39 : 'right',
+        40 : 'down',
     };
 
+   
     return (function (i) {
-        
-        snake.direction =  o[i];
-       
+
+
+        if ( snake.direction === 'right' && i === 37 ) {
+           snake.body.reverse()
+           snake.direction = o[i]
+        };
+
+        if ( snake.direction === 'left' && i === 39 ){
+           snake.body.reverse()
+           snake.direction = o[i]
+        };
+
+        if ( snake.direction === 'up' && i === 40 ) {
+           snake.body.reverse()
+           snake.direction = o[i]
+        };
+
+        if (  snake.direction === 'down' && i === 38 ) {
+            snake.body.reverse()
+           snake.direction = o[i]
+        };
+
+      return  snake.direction =  o[i];
+
+      
     })(event.keyCode);
 };
 
@@ -161,23 +189,21 @@ var coordHead = function () {
        
         if ( rm ) {
              createField.f[rm.y][rm.x].classList.remove('red');
+
         };
         
 
         if ( createField.f[add.y][add.x].classList.contains('food') ) {
            
             food( createField.f[add.y][add.x], createField.f,  snake.body );
-            
            
-          
         };
 
      
 
-     
-      
+
        
-}, 300);
+}, 200);
 })( createField );
 
 
