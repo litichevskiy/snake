@@ -1,32 +1,26 @@
-ul[data-snake="field"] {
-    width: 27.5em;
-    padding : 0;
-   
-}
-ul[data-snake="field"] > li {
-    position : relative;
-    display : block;
-    padding : 0;
-    margin : 0;
-    height : 10px;
-    list-style-type : none;
-}
-ul[data-snake="field"] > li > div {
-    float : left;
-    position : relative;
-    display : inline-block;
-    margin : 1px;
-    width : 10px;
-    height : 10px;
-    border : 1px solid grey;
-    border-radius: 2px;
-}
 
-.red {
+
+.snake_body_color {
+
     background-color : gray;
+
 }
 
 .food{
-  background-color: lightgreen;
+
+  background-color: coral;
+
+}
+
+
+span {
+
+  width   : 20px;
+  height  : 20px;
+  border  : 1px solid grey;
+  padding : 2px;
+  margin  : 0.5px;
+  display : inline-table;
+
 }
 

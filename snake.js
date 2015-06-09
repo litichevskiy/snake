@@ -1,89 +1,66 @@
 
+(function ( ) { 
 
 
+function Snake (  ) {
 
-(function ( ) {
+    this.direction = 'right';
+    this.heights;
+    this.widthts;
 
-    var createField = {
+    this.body = (function (o) {
 
-        xx : 31,
-        yy : 31,
-        f  : this.f,
-        getul : function () {
-            var elem = document.querySelector('[data-snake="field"]');
-            return elem;
-        },
+        this.body = [];
+        var x = 0;
 
-        field : function ( ul,f,s ) {
-            this.f = [];
+        for ( var i = 0; i < o.snake.length; i++  ) {
 
-            for ( var x = 0; x < createField.xx; x++ ) {
+            body.push({x:0,y:3});
+            x++
+        };
+            return this.body;
 
-                var li = document.createElement('li');
-                 var string = [];
-                this.f.push(string);
-                ul.appendChild(li);
+})(o);
+      
 
-            for ( var y = 0; y < createField.yy; y++ ) {
+this.CreateGame = function ( o ) {
 
-                var div = document.createElement('div');
-                 string.push(div);
-                li.appendChild(div);
-        
-            }
-            }
-            
-        },
-
-        getarray : function () {
-            return this.f
-        }
-    };
-
-
-    function game_over(){
-        alert( 'GAME OVER' );
-        
-    };
-
-
-    function food( a, b, c  ) {
-
-        var removed = a;
-        removed.classList.remove('food');
-        var f1 = b;
-        var s = Math.floor(Math.random() * f1.length ); 
-        var s1 = Math.floor(Math.random() * f1.length );
-        var snake_body = c;
-        snake_body.splice(1,0,{});//
-        f1[s][s1].classList.add('food');
+    this.heights = [];//
+    this.widthts = [];//
        
-   
+    for ( var x = 0; x < o.field.height; x++ ) {
+
+        var div = document.createElement('div');
+        this.widthts = [];
+        this.heights.push(this.widthts);
+        o.insideElement.appendChild(div);
+
+    for ( var y = 0; y < o.field.width; y++ ) {
+
+        var span = document.createElement('span');
+        this.widthts.push(span);
+        div.appendChild(span);
+        
     };
 
-
-    var getCoordHead = {
-        'up'    : function ( c ) { return { x : c.x    , y : c.y - 1 } },
-        'down'  : function ( c ) { return { x : c.x    , y : c.y + 1 } },
-        'left'  : function ( c ) { return { x : c.x - 1, y : c.y     } },
-        'right' : function ( c ) { return { x : c.x + 1, y : c.y     } },
     };
-
-    function Snake ( o ) {
-        this.body = o.body; // head --> 0
-        this.direction = 'right'; // down, left, up
+         
     };
+        
 
-
-
-    Snake.prototype.move = function () {
-        var snake = this;
     
-        this.body.unshift(
-            getCoordHead[this.direction]( this.body[0] )
-        );
+};
+
+
+ Snake.prototype.move = function () {
+
+    var snake = this;
     
-        var removed = this.body.pop();
+    this.body.unshift(
+        getCoordHead[this.direction]( this.body[0] )
+    );
+    
+    var removed = this.body.pop();
     
         return {
             added   : snake.body[0],
@@ -91,22 +68,40 @@
         }
     };
 
-   (function(createField){
-    var e = createField;
-    var snake = new Snake({
-    body : [
-        { x :  4, y : 15 },
-        { x :  3, y : 15 },
-        { x :  2, y : 15 },
-        { x :  1, y : 15 },
-        { x :  0, y : 15 }
-    ]
-});
-    
 
-var a = document.body;
+function food( a, b, c  ) {
 
-a.onkeydown = function (event) {
+        var removedFood = a;
+        removedFood.classList.remove('food');
+        var duble_heights = b;
+        var x = Math.floor(Math.random() * snake.widthts.length ); 
+        var y = Math.floor(Math.random() * snake.heights.length );
+        var snake_body = c;
+        snake_body.splice(1,0,{});//
+        duble_heights[x][y].classList.add('food');
+       
+   
+};
+
+var getCoordHead = {
+
+        'up'    : function ( c ) { return { x : c.x    , y : c.y - 1 } },
+        'down'  : function ( c ) { return { x : c.x    , y : c.y + 1 } },
+        'left'  : function ( c ) { return { x : c.x - 1, y : c.y     } },
+        'right' : function ( c ) { return { x : c.x + 1, y : c.y     } },
+    };
+
+
+function game_over ( ) {
+
+    alert( 'GAME OVER' );
+        
+};
+
+
+var get_keyCode = document.body;
+
+get_keyCode.onkeydown = function (event) {
   
    coordHead(event.keyCode);
   
@@ -116,7 +111,7 @@ a.onkeydown = function (event) {
 
 
 function  coordHead () {
-    //snake.direction
+   
     var o = {
 
         37 : 'left',
@@ -129,25 +124,25 @@ function  coordHead () {
     return (function (i) {
 
 
-        if ( snake.direction === 'right' && i === 37 ) {
-           snake.body.reverse()
-           snake.direction = o[i]
-        };
+        // if ( snake.direction === 'right' && i === 37 ) {
+        //    snake.body.reverse()
+        //    snake.direction = o[i]
+        // };
 
-        if ( snake.direction === 'left' && i === 39 ){
-           snake.body.reverse()
-           snake.direction = o[i]
-        };
+        // if ( snake.direction === 'left' && i === 39 ){
+        //    snake.body.reverse()
+        //    snake.direction = o[i]
+        // };
 
-        if ( snake.direction === 'up' && i === 40 ) {
-           snake.body.reverse()
-           snake.direction = o[i]
-        };
+        // if ( snake.direction === 'up' && i === 40 ) {
+        //    snake.body.reverse()
+        //    snake.direction = o[i]
+        // };
 
-        if (  snake.direction === 'down' && i === 38 ) {
-            snake.body.reverse()
-           snake.direction = o[i]
-        };
+        // if (  snake.direction === 'down' && i === 38 ) {
+        //     snake.body.reverse()
+        //    snake.direction = o[i]
+        // };
 
       return  snake.direction =  o[i];
 
@@ -157,65 +152,79 @@ function  coordHead () {
 
 
 
-    proc = setInterval(function func( ){
- 
-        createField.getarray();
-        
-        var res = snake.move();
-        var add = res.added;
-        var rm  = res.removed;
-        
-        if ( add.x ===  -1 || add.x === createField.f.length  ) {
-
-            clearInterval(proc); 
-            game_over();            
-            return;
-            };
-
-        if (  add.y ===  -1 || add.y === createField.f.length  ) {
-
-            clearInterval(proc);
-            game_over();
-            return;
-        };
-
-        if (  createField.f[add.y][add.x].classList.contains('red') ) {
-            clearInterval(proc);
-            game_over();
-            return;
-        }; 
-        
-        createField.f[add.y][add.x].classList.add('red');
-       
-        if ( rm ) {
-             createField.f[rm.y][rm.x].classList.remove('red');
-
-        };
-        
-
-        if ( createField.f[add.y][add.x].classList.contains('food') ) {
+function game( o ){
+   
+    var res = snake.move();
+    var add = res.added;
+    var rm  = res.removed;
            
-            food( createField.f[add.y][add.x], createField.f,  snake.body );
-           
-        };
+    if ( add.x === snake.widthts.length || add.y === snake.heights.length ||  add.x === -1 ||  add.y === -1 ) {   
 
-     
+        clearInterval(proc); 
+        game_over();            
+        return;
+    };
 
+    if (  add.y ===  snake.heights.length || add.y === snake.heights.length  ) {
 
+        clearInterval(proc);
+        game_over();
+        return;
+    };
+
+    if (  snake.heights[add.y][add.x].classList.contains('snake_body_color') ) {
+        clearInterval(proc);
+        game_over();
+        return;
+    }; 
+        
+    snake.heights[add.y][add.x].classList.add('snake_body_color');
        
-}, 200);
-})( createField );
+    if ( rm ) {
+        snake.heights[rm.y][rm.x].classList.remove('snake_body_color');
+
+    };
+        
+
+    if ( snake.heights[add.y][add.x].classList.contains('food') ) {
+           
+        food( snake.heights[add.y][add.x], snake.heights,  snake.body );
+          
+    };
+
+   
+};
 
 
-createField.field( createField.getul() );
 
-(function(createField){
-    var f1 = createField.f;
-    var s = 5;
-    var s1 = 3;
-    f1[s][s1].classList.add('food');
+var o = {
 
-})(createField);
+    field : {
+        width : 4,
+        height : 4
+    },
+    snake : {
+        length : 1
+    },
+     insideElement : elem = document.querySelector('[data-snake="field"]')
+};
+
+
+var snake = new Snake();
+
+snake.CreateGame( o );
+
+proc = setInterval(game, 300);
+
+
+(function(snake){
+    var fastFood = snake.heights;
+    var x = 2;
+    var y = 2;
+    fastFood[x][y].classList.add('food')
+})(snake);    
+
+
 
 
 })();
