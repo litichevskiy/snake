@@ -2,31 +2,25 @@
 (function ( ) { 
 
 
-function Snake (  ) {
+window.Snake = function ( o ) {
 
     this.direction = 'right';
     this.heights;
     this.widthts;
 
-    this.body = (function (o) {
-
-        this.body = [];
-        var x = 0;
-
-        for ( var i = 0; i < o.snake.length; i++  ) {
-
-            body.push({x:0,y:3});
-            x++
-        };
-            return this.body;
-
-})(o);
-      
 
 this.CreateGame = function ( o ) {
 
-    this.heights = [];//
-    this.widthts = [];//
+    this.heights = [];
+    this.widthts = [];
+    var x = 0;
+    this.body = [];
+
+    for ( var i = 0; i < o.snake.length; i++  ) {
+
+            this.body.push({x:0,y:2});
+            x++
+        };
        
     for ( var x = 0; x < o.field.height; x++ ) {
 
@@ -36,7 +30,7 @@ this.CreateGame = function ( o ) {
         o.insideElement.appendChild(div);
 
     for ( var y = 0; y < o.field.width; y++ ) {
-
+        
         var span = document.createElement('span');
         this.widthts.push(span);
         div.appendChild(span);
@@ -44,9 +38,11 @@ this.CreateGame = function ( o ) {
     };
 
     };
-         
+       this.heights[1][1].classList.add('food');
+  
     };
         
+   
 
     
 };
@@ -152,7 +148,8 @@ function  coordHead () {
 
 
 
-function game( o ){
+
+proc = setInterval(function game( o ){
    
     var res = snake.move();
     var add = res.added;
@@ -193,12 +190,24 @@ function game( o ){
     };
 
    
-};
+},300);
 
 
 
-var o = {
 
+
+})(window);
+
+
+
+
+
+
+var snake = new Snake();
+
+console.log( snake );
+
+snake.CreateGame({
     field : {
         width : 4,
         height : 4
@@ -206,25 +215,10 @@ var o = {
     snake : {
         length : 1
     },
-     insideElement : elem = document.querySelector('[data-snake="field"]')
-};
-
-
-var snake = new Snake();
-
-snake.CreateGame( o );
-
-proc = setInterval(game, 300);
-
-
-(function(snake){
-    var fastFood = snake.heights;
-    var x = 2;
-    var y = 2;
-    fastFood[x][y].classList.add('food')
-})(snake);    
+     insideElement : document.querySelector('[data-snake="field"]')
+});
 
 
 
 
-})();
+
