@@ -1,46 +1,60 @@
 
-(function ( w ) { 
+(function ( exports ) { 
 
 
-    window.snake = {
+    exports.snake = {
    
-        CreateGame : function ( o ) {
+        createField : function ( obj, createBodySnake ) {
+            
+            this.numbersStringField = [];
 
-            this.direction = 'right';
-            this.heights = [];
-            this.widthts = [];
-            var x = 0;
-            this.body = [];
+            for ( var i = 0; i < obj.field.height; i++ ) {                                
 
-            for ( var i = 0; i < o.snake.length; i++  ) {
+                var tagNameNumbersStringField = document.createElement('div');
+                var stringField = [];
+                this.numbersStringField.push( stringField );
+                obj.insideElement.appendChild( tagNameNumbersStringField );
 
-                this.body.push( {x:0,y:2} );
-                x++
-            };
-       
-            for ( var x = 0; x < o.field.height; x++ ) {
-
-                var div = document.createElement('div');
-                this.widthts = [];
-                this.heights.push( this.widthts );
-                o.insideElement.appendChild( div );
-
-                    for ( var y = 0; y < o.field.width; y++ ) {
-        
-                        var span = document.createElement('span');
-                        this.widthts.push( span );
-                        div.appendChild( span );
+                    for ( var j = 0; j < obj.field.width; j++ ) {
+                        
+                        var tagNameStringField = document.createElement('span');
+                        stringField.push( tagNameStringField );
+                        tagNameNumbersStringField.appendChild( tagNameStringField );
         
                     };
 
             };
 
-            this.heights[1][1].classList.add('food');
+            snake.createBodySnake( obj );
+            this.numbersStringField[0][2].classList.add('food');//
   
         },
-     
-        move : function () {
 
+
+        createBodySnake : function ( obj, motionSnake ) {
+           
+            this.body = [];
+
+            for ( var i = 0; i < obj.snake.length; i++  ) {
+
+                this.body.push( {x:0,y:0} );
+               
+            };
+            snake.motionSnake( );
+        },
+
+
+        motionSnake : function (  ) {
+            
+            this.direction = 'right';
+        }
+
+
+    };
+
+
+        snake.__proto__.move =  function  () {
+           
             var snake = this;
             this.body.unshift(
             getCoordHead[this.direction]( this.body[0] )
@@ -51,29 +65,29 @@
             return {
                 added   : snake.body[0],
                 removed : removed
-            }
-        }   
+            };
+        };   
    
 
     
+    function AddLengthSnakebody( snake ) {
+         
+        this.snake.body.splice(1,0, {x:0,y:0} );
     };
 
 
+    function food( elemClassFood, snake_numbersStringField  ) {
 
-
-    function food( a, b, c  ) {
-
-        var removedFood = a;
-        removedFood.classList.remove('food');
-        var duble_heights = b;
-        var x = Math.floor( Math.random() * snake.widthts.length ); 
-        var y = Math.floor( Math.random() * snake.heights.length );
-        var snake_body = c;
-        snake_body.splice( 1, 0, {} );
-        duble_heights[x][y].classList.add('food');
+        var removeElemClassFood = elemClassFood;
+        var duble_numbersStringField = snake_numbersStringField;
+        var x = Math.floor( Math.random() * snake_numbersStringField.length ); 
+        var y = Math.floor( Math.random() * snake_numbersStringField.length );
+        removeElemClassFood.classList.remove('food');
+        duble_numbersStringField[x][y].classList.add('food');
        
    
     };
+
 
     var getCoordHead = {
 
@@ -95,8 +109,8 @@
 
     get_keyCode.onkeydown = function (event) {
   
+        //reverseMotion( snake.direction,event.keyCode);
         coordHead(event.keyCode);
-  
     };
 
 
@@ -104,96 +118,104 @@
 
     function  coordHead () {
    
-        var o = {
+        var obj = {
 
             37 : 'left',
             38 : 'up',
             39 : 'right',
-            40 : 'down',
+            40 : 'down'
         };
 
    
-        return (function (i) {
+        return (function (event_keyCode) {
 
-
-        // if ( snake.direction === 'right' && i === 37 ) {
-        //    snake.body.reverse()
-        //    snake.direction = o[i]
-        // };
-
-        // if ( snake.direction === 'left' && i === 39 ){
-        //    snake.body.reverse()
-        //    snake.direction = o[i]
-        // };
-
-        // if ( snake.direction === 'up' && i === 40 ) {
-        //    snake.body.reverse()
-        //    snake.direction = o[i]
-        // };
-
-        // if (  snake.direction === 'down' && i === 38 ) {
-        //     snake.body.reverse()
-        //    snake.direction = o[i]
-        // };
-
-            return  snake.direction =  o[i];
+            return  snake.direction = obj[event_keyCode];
 
       
         })(event.keyCode);
     };
 
 
+    function reverseMotion (  ) {
 
 
-    proc = setInterval(function game( o ){
+        if ( snake.direction === 'right' && event.keyCode === 37 ) {
+            snake.body.reverse();
+            snake.direction = 'left';
+            return;
+        };
+
+        if ( snake.direction === 'left' && event.keyCode === 39 ) {
+            snake.body.reverse();
+            snake.direction = 'right';
+            return;
+        };
+
+        if ( snake.direction === 'up' && event.keyCode === 40 ) {
+            snake.body.reverse();
+            snake.direction = 'down';
+            return;
+        };
+
+        if ( snake.direction === 'down' && event.keyCode === 38 ) {
+            snake.body.reverse();
+            snake.direction = 'up';
+            return;
+        };
+        
+
+    }
+
+
+
+
+    var proc = setInterval( function game ( ) {
    
         var res = snake.move();
         var add = res.added;
         var rm  = res.removed;
            
-        if ( add.x === snake.widthts.length || add.y === snake.heights.length ||  add.x === -1 ||  add.y === -1 ) {   
+        if ( add.x === snake.numbersStringField.length || add.y === snake.numbersStringField.length ||  add.x === -1 ||  add.y === -1 ) {   
 
             clearInterval(proc); 
             game_over();            
             return;
         };
 
-        if (  add.y ===  snake.heights.length || add.y === snake.heights.length  ) {
+        if ( add.y ===  snake.numbersStringField.length || add.y === snake.numbersStringField.length ) {
 
             clearInterval(proc);
             game_over();
             return;
         };
 
-        if (  snake.heights[add.y][add.x].classList.contains('snake_body_color') ) {
+        if ( snake.numbersStringField[add.y][add.x].classList.contains('snake_body_color') ) {
+
             clearInterval(proc);
             game_over();
             return;
         }; 
         
-        snake.heights[add.y][add.x].classList.add('snake_body_color');
+        snake.numbersStringField[add.y][add.x].classList.add('snake_body_color');
        
         if ( rm ) {
-            snake.heights[rm.y][rm.x].classList.remove('snake_body_color');
+
+            snake.numbersStringField[rm.y][rm.x].classList.remove('snake_body_color');
 
         };
         
 
-        if ( snake.heights[add.y][add.x].classList.contains('food') ) {
+        if ( snake.numbersStringField[add.y][add.x].classList.contains('food') ) {
            
-            food( snake.heights[add.y][add.x], snake.heights,  snake.body );
-          
+            food( snake.numbersStringField[add.y][add.x], snake.numbersStringField  );
+            AddLengthSnakebody( snake.body );
+            
         };
  
   
     },300);
 
 
-    (function func( o ){
-        var x = 1;
-        var y = 2;
-        snake.heights[x][y].classList.add('food'); 
-    }) 
 
 
 })(window);
@@ -204,19 +226,18 @@
 
 
 
-
-
-
-snake.CreateGame({
+snake.createField({
     field : {
-        width : 20,
-        height : 20
+        width : 15,
+        height : 15
     },
     snake : {
-        length : 4
+        length : 2
     },
-     insideElement : document.querySelector('[data-snake="field"]')
+    insideElement : document.querySelector('[data-snake="field"]')
 });
+
+
 
 
 
