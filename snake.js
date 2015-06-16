@@ -38,10 +38,10 @@
 
             for ( var x = 0, l = this.width; x <= l; x++ ) {
                 if ( !field[y][x] ) {
-                    line += 'o ';
+                    line += '. ';
                 } else if ( field[y][x].type === 'snake' ) {
                     if ( this.snakeHeadCoords.x === x && this.snakeHeadCoords.y === y ) line += '# ';
-                    else line += '* ';
+                    else line += 'o ';
                 }
             }
 
@@ -98,7 +98,7 @@
 
 (new Snake({
     field : {
-        width : 30,
-        height : 30
+        width : 10,
+        height : 10
     } 
 }))._dump();
