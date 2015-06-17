@@ -8,25 +8,32 @@
             'field size can not be less than 10x10'
         );
 
+        this.freeCells = {};
         this.height = o.field.height;
         this.width  = o.field.width;
         this.target = o.insideElement;
         this.direction = 'right';
-        this.field = createField(this.height, this.width);
+        this.field = createField.call(this, this.height, this.width);
 
-        this.snakeHeadCoords = putSnakeToField({
+        this.body = putSnakeToField.call(this, {
             field  : this.field,
             height : this.height,
             width  : this.width,
             length : SNAKE_LENGTH
         });
 
-        //this.length     = o.length;
-        //this.body       = 
-        //this.direction  = 'right'; // down, left, up
     }
 
     Game.fn = Game.prototype;
+
+    Game.fn.createFood = createFood;
+
+    Game.fn.pushFreeCell = function ( x, y ) {
+        this.freeCells[ coordsToString(x, y) ] = true;
+    };
+    Game.fn.popFreeCell = function ( x, y ) {
+        delete this.freeCells[ coordsToString(x, y) ];
+    };
 
     Game.fn._dump = function () {
         var field = this.field,
@@ -39,9 +46,11 @@
             for ( var x = 0, l = this.width; x <= l; x++ ) {
                 if ( !field[y][x] ) {
                     line += '. ';
-                } else if ( field[y][x].type === 'snake' ) {
-                    if ( this.snakeHeadCoords.x === x && this.snakeHeadCoords.y === y ) line += '# ';
+                } else if ( field[y][x].item === 'snake' ) {
+                    if ( this.body[0].coords.x === x && this.body[0].coords.y === y ) line += '# ';
                     else line += 'o ';
+                } else if ( field[y][x].item === 'food' ) {
+                    line += '@ ';
                 }
             }
 
@@ -49,6 +58,20 @@
         }
 
         console.log(view);
+    };
+
+    function coordsToString ( x, y ) {
+        return x + ':' + y;
+    }
+
+    function coordsFromString ( str ) {
+
+        var arr = str.split(':');
+
+        return {
+            x : arr[0],
+            y : arr[1]
+        }
     }
 
     function createField ( height, width ) {
@@ -61,6 +84,8 @@
 
             for ( var x = 0, l = width; x <= l; x++ ) {
                 line.push(null);
+
+                this.pushFreeCell(x, y);
             }
 
             field.push(line);
@@ -72,17 +97,42 @@
     function putSnakeToField ( o ) {
         var y = Math.round(o.height / 2),
             x = Math.round(o.width / 2 - o.length / 2),
-            field = o.field;
+            field = o.field,
+            body = [];
 
-        for ( var l = o.length + x; x <= l; x++ ) {
-            field[y][x] = { type : 'snake' };
+        for ( var l = o.length + x; x < l; x++ ) {
+
+            var part = {
+                item : 'snake',
+                coords : {
+                    x : x,
+                    y : y
+                }
+            };
+
+            body.unshift( field[y][x] = part );
+
+            this.popFreeCell(x, y);
         }
 
         // snake head coords 
-        return {
-            x : x - 1,
-            y : y
+        return body;
+    }
+
+    function createFood () {
+        var free = Object.keys(this.freeCells),
+            random = Math.round( Math.random() * ( free.length - 1 ) ), 
+            coords = coordsFromString( free[random] );
+
+        this.field[coords.y][coords.x] = {
+            item : 'food',
+            coords : {
+                x : coords.x,
+                y : coords.y
+            }
         };
+
+        this.popFreeCell( coords.x, coords.y );
     }
 
     var getCoordHead = {
@@ -96,9 +146,15 @@
 
 })(window);
 
-(new Snake({
+var snake = new Snake({
     field : {
         width : 10,
         height : 10
     } 
-}))._dump();
+})
+
+snake.createFood();
+
+snake._dump();
+
+console.log( Object.keys(snake.freeCells).length );
