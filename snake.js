@@ -51,9 +51,11 @@
 
         PubSub.call(this);
 
+        this.isInited = false;
         this.target = o.insideElement;
         this.direction = 'right';
-        this.active = false;
+        this.paused = false;
+        this.isActive = true;
         this.process;
         this.frameCount = 0;
         this.speed = 1; // max 5
@@ -76,9 +78,9 @@
 
     Game.fn.start = function () {
 
-        if ( this.active ) return;
+        if ( this.paused || !this.isActive ) return;
 
-        this.active = true;
+        this.paused = true;
 
         var that = this;
 
@@ -89,11 +91,30 @@
             },
             SPEED_TO_FRAME_RATE[this.speed]
         );
+
+        if ( !this.isInited ) {
+            var snake = this;
+
+            this.isInited = true;
+            //this.subscribe('frame', this.moveSnake.bind(this));
+            this.subscribe('frame', function(){
+                snake.moveSnake();
+                console.clear();
+                snake._dump();
+            });
+        }
     };
 
     Game.fn.pause = function () {
-        this.active = false;
+        this.paused = false;
         clearInterval(this.process);
+    };
+
+    Game.fn.gameOver = function () {
+        this.isActive = false;
+        clearInterval(this.process);
+        //console.log('game over');
+        alert('game over');
     };
 
     Game.fn.increaseSpeed = function () {
@@ -107,34 +128,45 @@
 
     Game.fn.moveSnake = function () {
         var newCoords = getCoordHead[this.direction](this.body[0].coords),
-            part = {
+            toCell = this.field.get(newCoords.x, newCoords.y),
+            head = {
                 item : 'snake',
+                type : 'head',
                 coords : newCoords
             };
 
-        this.body.unshift(part);
+        if ( toCell instanceof Error || (toCell && toCell.item === 'snake') ) {
+            return this.gameOver();
+        }
+
+        this.body[0].type = 'body';
+
+        this.body.unshift(head);
         
-        this.field.put(newCoords.x, newCoords.y, part);
+        this.field.put(newCoords.x, newCoords.y, head);
 
-        this.body.pop();
-
-        this.field.rm(newCoords.x, newCoords.y);
+        if ( !toCell || !toCell.item === 'food' ) {
+            var last = this.body.pop();
+            this.field.rm(last.coords.x, last.coords.y);
+        }
     };
 
     Game.fn._dump = function () {
-        var field = this.field._field,
-            view = '';
+        var field  = this.field._field,
+            height = this.field.height,
+            width  = this.field.width,
+            view   = '';
 
-        for ( var y = 0, l = this.field.height; y <= l; y++ ) {
+        for ( var y = 0, l = height; y <= l; y++ ) {
 
             var line = '';
 
-            for ( var x = 0, l = this.field.width; x <= l; x++ ) {
+            for ( var x = 0, l = width; x <= l; x++ ) {
                 if ( !field[y][x] ) {
                     line += '. ';
                 } else if ( field[y][x].item === 'snake' ) {
-                    if ( this.body[0].coords.x === x && this.body[0].coords.y === y ) line += '# ';
-                    else line += 'o ';
+                    if ( field[y][x].type === 'body' ) line += 'o ';
+                    else line += '# ';
                 } else if ( field[y][x].item === 'food' ) {
                     line += '@ ';
                 }
@@ -153,10 +185,11 @@
             field = this.field,
             body = [];
 
-        for ( var l = SNAKE_LENGTH + x; x < l; x++ ) {
+        for ( var l = SNAKE_LENGTH + x - 1; x < l; x++ ) {
 
             var part = {
                 item : 'snake',
+                type : 'body',
                 coords : {
                     x : x,
                     y : y
@@ -166,19 +199,31 @@
             body.unshift( this.field.put(x, y, part) );
         }
 
+        body.unshift(this.field.put(x, y, {
+            item : 'snake',
+            type : 'head',
+            coords : {
+                x : x,
+                y : y
+            }
+        }));
+
         return body;
     }
 
-    function createFood () {
+    function createFood ( x, y ) {
         var free = this.field.getFreeCells(),
             random = Math.round( Math.random() * ( free.length - 1 ) ), 
-            coords = free[random];
+            coords = free[random],
+            x = x || coords.x,
+            y = y || coords.y;
 
-        this.field.put(coords.x, coords.y, {
+        this.field.put(x, y, {
             item : 'food',
+            type : 'regular',
             coords : {
-                x : coords.x,
-                y : coords.y
+                x : x,
+                y : y
             }
         });
     }
@@ -200,7 +245,10 @@
         }
 
         Field.fn.get = function ( x, y ) {
-            return this._field[y][x];
+
+            return x > this.height || x > this.width || x < 0 || y < 0
+                ? new Error('out of field')
+                : this._field[y][x];
         }
 
         Field.fn.getFreeCells = function () {
@@ -279,14 +327,10 @@ var snake = new Snake({
     } 
 });
 
-snake.createFood();
-
-snake._dump();
-
-snake.moveSnake();
-
-snake._dump();
-
-snake.moveSnake();
-
-snake._dump();
+snake.createFood(9, 5);
+snake.createFood(8, 5);
+snake.start();
+snake.subscribe('frame', function(){
+    //if ( snake.frameCount === 3 ) snake.direction = 'up';
+    //if ( snake.frameCount === 6 ) snake.direction = 'left';
+})
