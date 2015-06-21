@@ -13,7 +13,7 @@
 
     function Game ( o ) {
 
-        if ( o.field.height < 10 || o.field.width < 10 ) throw(
+        if ( o.field.height < 5 || o.field.width < 5 ) throw(
             'field size can not be less than 10x10'
         );
 
@@ -30,8 +30,6 @@
             height : o.field.height,
             width  : o.field.width
         });
-        this.body = putSnakeToField.call(this);
-
     }
 
     Game.prototype = Object.create( PubSub.prototype );
@@ -46,6 +44,7 @@
             x = x || coords.x,
             y = y || coords.y;
 
+        console.log('food --- x : ' + x + ', y : ' + y);
         this.field.put(x, y, {
             item : 'food',
             type : 'regular',
@@ -74,6 +73,8 @@
 
         if ( !this.isInited ) {
             this.isInited = true;
+            this.body = putSnakeToField.call(this);
+            this.createFood();
             this.subscribe('frame', this.moveSnake.bind(this));
         }
     };
@@ -260,6 +261,11 @@
                 field.push(line);
             }
 
+            this.publish('fied created', {
+                width  : width,
+                height : height
+            });
+
             return field;
         }
 
@@ -296,6 +302,6 @@
         'right' : function ( c ) { return { x : c.x + 1, y : c.y     } },
     };
 
-        exports.Snake = Game;
+        exports.SnakeCore = Game;
 
 })(window, PubSub);

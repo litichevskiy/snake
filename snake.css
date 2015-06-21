@@ -1,32 +1,30 @@
-ul[data-snake="field"] {
-    width: 27.5em;
-    padding : 0;
-   
-}
-ul[data-snake="field"] > li {
+div[data-snake-game="container"] {
+    display : inline-block;
+    }
+div[data-snake-game="container"] > div {
     position : relative;
-    display : block;
-    padding : 0;
+    background-color : rgb(167, 205, 184);
     margin : 0;
-    height : 10px;
-    list-style-type : none;
-}
-ul[data-snake="field"] > li > div {
-    float : left;
+    padding : 0;
+    }
+
+div[data-snake-game="container"] > div > span {
     position : relative;
     display : inline-block;
-    margin : 1px;
-    width : 10px;
-    height : 10px;
-    border : 1px solid grey;
-    border-radius: 2px;
-}
+    width : 2em;
+    height : 2em;
+    margin : 0;
+    margin-right : 0.2em;
+    background-color : rgb(167, 205, 184);
+    border : 1px solid rgb(167, 205, 184);
+    }
 
-.red {
-    background-color : gray;
-}
+div[data-snake-game="container"] > div > span.food {
+    background-color : rgb(96, 112, 97);
+    border : 1px solid rgb(96, 112, 97);
+    }
 
-.food{
-  background-color: lightgreen;
-}
-
+div[data-snake-game="container"] > div > span.snake {
+    background-color : rgb(116, 132, 117);
+    border : 1px solid rgb(116, 132, 117);
+    }
